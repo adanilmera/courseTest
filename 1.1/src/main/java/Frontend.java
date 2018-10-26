@@ -8,27 +8,25 @@ import java.util.Map;
 
 public class Frontend extends HttpServlet {
 
-    private String login="";
-
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = createPageVariablesMap(request);
-        pageVariables.put("message", "");
+        pageVariables.put("message","You location is : "+ request.getRequestURL());
 
-        response.getWriter().println(PageGenerator.instance().getPage("page.html", pageVariables));
+        if(request.getRequestURL().toString().contains("mirror"))
+            response.getWriter().println(request.getParameter("key"));
+        else
+            response.getWriter().println(PageGenerator.instance().getPage("page.html", pageVariables));
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = createPageVariablesMap(request);
-
         String message = request.getParameter("message");
-
         response.setContentType("text/html;charset=utf-8");
 
         if (message == null || message.isEmpty()) {
@@ -50,4 +48,6 @@ public class Frontend extends HttpServlet {
         pageVariables.put("parameters", request.getParameterMap().toString());
         return pageVariables;
     }
+
+
 }
